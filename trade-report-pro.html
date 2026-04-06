@@ -468,7 +468,7 @@ async function doSync(p) {
   if (btn&&p===currentAccount){btn.innerHTML='⟳ מסנכרן... <span class="spinner"></span>';btn.disabled=true;}
   showSR(p,'','');
   try {
-    const proxy='https://corsproxy.io/?url=';
+    const proxy='https://long-voice-979fib-proxy.israelco7890.workers.dev/?url=';
     const r1=await fetch(proxy+encodeURIComponent(`https://gdcdyn.interactivebrokers.com/Universal/servlet/FlexStatementService.SendRequest?t=${token}&q=${queryId}&v=3`));
     const xml1=(new DOMParser()).parseFromString(await r1.text(),'text/xml');
     const ref=xml1.querySelector('ReferenceCode')?.textContent;
