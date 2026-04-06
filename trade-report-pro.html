@@ -484,9 +484,20 @@ async function doSync(p) {
       if(trades[p].some(t=>t.ibTradeId===ibId))continue;
       const dateRaw=tag.getAttribute('dateTime')||tag.getAttribute('tradeDate')||'';
       const date=dateRaw.slice(0,8).replace(/(\d{4})(\d{2})(\d{2})/,'$1-$2-$3');
+      const buySell=tag.getAttribute('buySell')||'BUY';
+      const direction=buySell==='BUY'?'Long':'Short';
       const qty=Math.abs(parseFloat(tag.getAttribute('quantity')||0));
-      const pnl=parseFloat(tag.getAttribute('fifoPnlRealized')||0);
-      const nt={date,symbol:tag.getAttribute('symbol')||'',direction:tag.getAttribute('buySell')==='BUY'?'Long':'Short',status:'סגורה',qty,entry:parseFloat(tag.getAttribute('tradePrice')||0),exit:0,sl:0,tp:0,fee:Math.abs(parseFloat(tag.getAttribute('ibCommission')||0)),strategy:'IB Import',rating:0,notes:`IB ${p.toUpperCase()} | P&L: ${pnl.toFixed(2)}`,ibTradeId:ibId,source:'ib',account:p};
+      const entry=parseFloat(tag.getAttribute('tradePrice')||0);
+      const fee=Math.abs(parseFloat(tag.getAttribute('ibCommission')||tag.getAttribute('commission')||0));
+      const ibPnl=parseFloat(tag.getAttribute('fifoPnlRealized')||tag.getAttribute('realizedPnl')||0);
+      const closePrice=parseFloat(tag.getAttribute('closePrice')||0);
+      let exit=closePrice||0;
+      if(!exit&&ibPnl!==0&&qty>0){
+        exit=direction==='Long'?(entry+(ibPnl+fee)/qty):(entry-(ibPnl+fee)/qty);
+        exit=parseFloat(exit.toFixed(6));
+      }
+      const status=(ibPnl!==0||exit>0)?'סגורה':'פתוחה';
+      const nt={date,symbol:tag.getAttribute('symbol')||'',direction,status,qty,entry,exit,sl:0,tp:0,fee,strategy:'IB Import',rating:0,notes:`IB ${p.toUpperCase()} | P&L: ${ibPnl.toFixed(2)}`,ibTradeId:ibId,ibPnl,source:'ib',account:p};
       const sid=await saveTradeFS(p,{id:null,...nt});
       trades[p].push({id:sid,...nt});cnt++;
     }
@@ -510,7 +521,7 @@ function updateSyncStatus(){
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 
 // ── CALC ──
-function calcPnL(t){if(!t.exit||!t.entry||!t.qty)return null;const r=t.direction==='Long'?(t.exit-t.entry)*t.qty:(t.entry-t.exit)*t.qty;return r-(parseFloat(t.fee)||0);}
+function calcPnL(t){if(t.ibPnl!==undefined&&t.ibPnl!==null&&t.ibPnl!==0)return parseFloat(t.ibPnl);if(!t.exit||!t.entry||!t.qty)return null;const r=t.direction==='Long'?(t.exit-t.entry)*t.qty:(t.entry-t.exit)*t.qty;return r-(parseFloat(t.fee)||0);}
 function calcR(t){if(!t.sl||!t.entry||!t.qty)return null;const risk=Math.abs(t.entry-t.sl)*t.qty;if(!risk)return null;const pnl=calcPnL(t);if(pnl===null)return null;return(pnl/risk).toFixed(2);}
 function getStats(){
   const closed=trades[currentAccount].filter(t=>t.status==='סגורה'&&calcPnL(t)!==null);
