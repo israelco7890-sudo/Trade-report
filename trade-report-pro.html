@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+[10/04/2026 18:12] israel cohen: <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -43,7 +43,7 @@
   .logo-text{font-family:var(--mono);font-size:14px;font-weight:700;letter-spacing:2px;color:var(--accent);}
   .logo-sub{font-size:10px;color:var(--text3);font-family:var(--mono);}
   .header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-  .account-switcher{display:flex;align-items:center;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:4px;}
+[10/04/2026 18:12] israel cohen: .account-switcher{display:flex;align-items:center;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:4px;}
   .acc-btn{padding:6px 14px;border-radius:7px;border:none;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;background:none;color:var(--text3);letter-spacing:1px;}
   .acc-btn.live.active{background:rgba(0,212,170,0.15);color:var(--green);border:1px solid rgba(0,212,170,0.3);}
   .acc-btn.demo.active{background:rgba(255,209,102,0.15);color:var(--yellow);border:1px solid rgba(255,209,102,0.3);}
@@ -89,8 +89,7 @@
   .card-body{padding:18px;}
   .charts-row{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:14px;}
   canvas{width:100%!important;max-height:190px;}
-
-  /* SYNC BANNER */
+[10/04/2026 18:12] israel cohen: /* SYNC BANNER */
   .sync-banner{background:linear-gradient(135deg,rgba(0,149,255,0.08),rgba(0,212,170,0.08));border:1px solid rgba(0,149,255,0.25);border-radius:12px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
   .sync-banner-text{font-size:13px;color:var(--text2);}
   .sync-banner-text strong{color:var(--accent2);font-family:var(--mono);}
@@ -141,7 +140,7 @@
   .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
   .modal-backdrop.open{display:flex;}
   .modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px;width:580px;max-width:95vw;max-height:90vh;overflow-y:auto;direction:rtl;}
-  .modal-title{font-family:var(--mono);font-size:14px;color:var(--accent);margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;}
+[10/04/2026 18:12] israel cohen: .modal-title{font-family:var(--mono);font-size:14px;color:var(--accent);margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;}
   .close-btn{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;}
   .close-btn:hover{color:var(--text);}
   .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:16px;}
@@ -189,7 +188,7 @@
   /* WEEKLY */
   .weekly-list{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
   .week-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;}
-  .week-lbl{font-size:12px;font-weight:700;color:var(--text2);font-family:var(--mono);}
+[10/04/2026 18:12] israel cohen: .week-lbl{font-size:12px;font-weight:700;color:var(--text2);font-family:var(--mono);}
   .week-dates{font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:2px;}
   .week-trades-txt{font-size:11px;color:var(--text3);margin-top:2px;}
   .week-pnl{font-size:20px;font-weight:700;font-family:var(--mono);}
@@ -269,8 +268,7 @@
 
   <!-- STATS (global, filtered) -->
   <div class="stats-grid" id="statsGrid"></div>
-
-  <!-- ══════ DASHBOARD ══════ -->
+[10/04/2026 18:12] israel cohen: <!-- ══════ DASHBOARD ══════ -->
   <div class="panel active" id="panel-dashboard">
     <div class="sync-banner">
       <div>
@@ -340,8 +338,7 @@
     </div>
     <div class="stats-grid" id="analyticsStats"></div>
   </div>
-
-  <!-- ══════ SETTINGS ══════ -->
+[10/04/2026 18:12] israel cohen: <!-- ══════ SETTINGS ══════ -->
   <div class="panel" id="panel-settings">
     <div class="card" style="margin-bottom:14px">
       <div class="card-header"><div class="card-title">🔗 חיבור Interactive Brokers</div></div>
@@ -383,6 +380,7 @@
           <button class="btn btn-outline" onclick="exportCSV()">⬇ ייצוא CSV</button>
           <label class="btn btn-outline" style="cursor:pointer">⬆ ייבוא CSV<input type="file" accept=".csv" style="display:none" onchange="importCSV(this)"></label>
           <button class="btn btn-danger" onclick="clearAll()">🗑 מחק הכל</button>
+          <button class="btn btn-outline" onclick="dedupTrades()" style="border-color:var(--yellow);color:var(--yellow)">🔧 מחק כפילויות IB</button>
         </div>
       </div>
     </div>
@@ -399,7 +397,7 @@
       <div class="form-group"><label>תאריך</label><input type="date" id="f-date"></div>
       <div class="form-group"><label>סמל</label><input type="text" id="f-symbol" placeholder="AAPL, BTC..."></div>
       <div class="form-group"><label>כיוון</label><select id="f-direction"><option value="Long">Long ↑</option><option value="Short">Short ↓</option></select></div>
-      <div class="form-group"><label>סטטוס</label><select id="f-status"><option value="סגורה">סגורה</option><option value="פתוחה">פתוחה</option></select></div>
+[10/04/2026 18:12] israel cohen: <div class="form-group"><label>סטטוס</label><select id="f-status"><option value="סגורה">סגורה</option><option value="פתוחה">פתוחה</option></select></div>
       <div class="form-group"><label>כמות</label><input type="number" id="f-qty" step="0.001"></div>
       <div class="form-group"><label>כניסה</label><input type="number" id="f-entry" step="0.0001"></div>
       <div class="form-group"><label>יציאה</label><input type="number" id="f-exit" step="0.0001"></div>
@@ -473,7 +471,7 @@ function switchAuthTab(tab){
 async function doLogin(){
   document.getElementById('authError').textContent='';
   try{await auth.signInWithEmailAndPassword(document.getElementById('loginEmail').value,document.getElementById('loginPass').value);}
-  catch(e){document.getElementById('authError').textContent=xlateErr(e.code);}
+[10/04/2026 18:12] israel cohen: catch(e){document.getElementById('authError').textContent=xlateErr(e.code);}
 }
 async function doRegister(){
   document.getElementById('authError').textContent='';
@@ -539,11 +537,11 @@ function getFilteredTrades(){
 // ── FIRESTORE ──
 async function loadUserData(){
   const sd=await db.collection('users').doc(currentUser.uid).collection('data').doc('settings').get();
-  if(sd.exists){const d=sd.data();userSettings=d.general||{capital:10000,currency:'USD'};ibProfiles=d.ibProfiles||{live:{token:'',queryId:''},demo:{token:'',queryId:''}};}
+  if(sd.exists){const d=sd.data();userSettings=d.general{capital:10000,currency:'USD'};ibProfiles=d.ibProfiles{live:{token:'',queryId:''},demo:{token:'',queryId:''}};}
   for(const acc of['live','demo']){
     const snap=await db.collection('users').doc(currentUser.uid).collection(acc+'_trades').get();
     trades[acc]=snap.docs.map(d=>({id:d.id,...d.data()}));
-    trades[acc].sort((a,b)=>(a.date||'')>(b.date||'')?1:-1);
+    trades[acc].sort((a,b)=>(a.date'')>(b.date'')?1:-1);
   }
   updateSyncStatus();
 }
@@ -551,7 +549,7 @@ async function saveTradeFS(acc,t){
   const{id,...data}=t;
   const col=db.collection('users').doc(currentUser.uid).collection(acc+'_trades');
   if(id){await col.doc(id).set(data);return id;}
-  const ref=await col.add(data);return ref.id;
+[10/04/2026 18:12] israel cohen: const ref=await col.add(data);return ref.id;
 }
 async function deleteTradeFS(acc,id){await db.collection('users').doc(currentUser.uid).collection(acc+'_trades').doc(id).delete();}
 async function saveSettings(){await db.collection('users').doc(currentUser.uid).collection('data').doc('settings').set({general:userSettings,ibProfiles});}
@@ -563,56 +561,130 @@ function updateSyncStatus(){
   const p=ibProfiles[currentAccount];
   const el=document.getElementById('syncStatusText');
   if(!el)return;
-  el.textContent=p.token&&p.queryId?`✅ מחובר — ${currentAccount.toUpperCase()} | Query: ${p.queryId}`:'לא מחובר — הגדר Token בהגדרות';
+  el.textContent=p.token&&p.queryId?✅ מחובר — ${currentAccount.toUpperCase()} | Query: ${p.queryId}:'לא מחובר — הגדר Token בהגדרות';
 }
 window.saveIBSettings=async(p)=>{
   ibProfiles[p].token=document.getElementById('ibToken'+cap(p)).value.trim();
   ibProfiles[p].queryId=document.getElementById('ibQueryId'+cap(p)).value.trim();
-  await saveSettings();showSR(p,'success',`✅ הגדרות ${p.toUpperCase()} נשמרו`);updateSyncStatus();
+  await saveSettings();showSR(p,'success',✅ הגדרות ${p.toUpperCase()} נשמרו);updateSyncStatus();
 };
 window.syncIBProfile=async(p)=>{await doSync(p);};
 window.syncIB=async()=>{await doSync(currentAccount);};
 
 async function doSync(p){
   const token=ibProfiles[p].token,queryId=ibProfiles[p].queryId;
-  if(!token||!queryId){alert(`נא להגדיר Token ו-Query ID עבור ${p.toUpperCase()} בהגדרות`);return;}
+  if(!token||!queryId){alert(נא להגדיר Token ו-Query ID עבור ${p.toUpperCase()} בהגדרות);return;}
   const btn=document.getElementById('syncBtn');
   if(btn&&p===currentAccount){btn.innerHTML='⟳ מסנכרן... <span class="spinner"></span>';btn.disabled=true;}
   showSR(p,'','');
   try{
     const proxy='https://long-voice-979fib-proxy.israelco7890.workers.dev/?url=';
-    const r1=await fetch(proxy+encodeURIComponent(`https://gdcdyn.interactivebrokers.com/Universal/servlet/FlexStatementService.SendRequest?t=${token}&q=${queryId}&v=3`));
+    const r1=await fetch(proxy+encodeURIComponent(https://gdcdyn.interactivebrokers.com/Universal/servlet/FlexStatementService.SendRequest?t=${token}&q=${queryId}&v=3));
     const xml1=(new DOMParser()).parseFromString(await r1.text(),'text/xml');
     const ref=xml1.querySelector('ReferenceCode')?.textContent;
-    if(!ref||xml1.querySelector('Status')?.textContent==='Fail')throw new Error(xml1.querySelector('ErrorMessage')?.textContent||'שגיאה מ-IB');
+    if(!refxml1.querySelector('Status')?.textContent==='Fail')throw new Error(xml1.querySelector('ErrorMessage')?.textContent'שגיאה מ-IB');
     await new Promise(r=>setTimeout(r,3000));
-    const r2=await fetch(proxy+encodeURIComponent(`https://gdcdyn.interactivebrokers.com/Universal/servlet/FlexStatementService.GetStatement?q=${ref}&t=${token}&v=3`));
+    const r2=await fetch(proxy+encodeURIComponent(https://gdcdyn.interactivebrokers.com/Universal/servlet/FlexStatementService.GetStatement?q=${ref}&t=${token}&v=3));
     const xml2=(new DOMParser()).parseFromString(await r2.text(),'text/xml');
-    const tags=xml2.querySelectorAll('Trade');
+    const tags=Array.from(xml2.querySelectorAll('Trade'));
     if(!tags.length)throw new Error('לא נמצאו עסקאות בתגובה מ-IB');
-    let cnt=0;
+
+    // ── Group executions by symbol + date → one trade per symbol per day ──
+    const grouped={}; // key: "SYMBOL_DATE"
     for(const tag of tags){
-      const ibId=tag.getAttribute('tradeID')||tag.getAttribute('execID')||'';
-      if(trades[p].some(t=>t.ibTradeId===ibId))continue;
-      const dateRaw=tag.getAttribute('dateTime')||tag.getAttribute('tradeDate')||'';
+      const symbol=tag.getAttribute('symbol')||'';
+      const dateRaw=tag.getAttribute('dateTime')tag.getAttribute('tradeDate')'';
       const date=dateRaw.slice(0,8).replace(/(\d{4})(\d{2})(\d{2})/,'$1-$2-$3');
+      const key=symbol+'_'+date;
       const buySell=tag.getAttribute('buySell')||'BUY';
       const isSell=(buySell==='SELL'||buySell==='SLD');
       const qty=Math.abs(parseFloat(tag.getAttribute('quantity')||0));
       const price=parseFloat(tag.getAttribute('tradePrice')||0);
-      const fee=Math.abs(parseFloat(tag.getAttribute('ibCommission')||tag.getAttribute('commission')||0));
-      const ibPnlRaw=parseFloat(tag.getAttribute('fifoPnlRealized')||0);
-      const closePrice=parseFloat(tag.getAttribute('closePrice')||0);
-      let entry=price,exit=0,ibPnl=ibPnlRaw,status='פתוחה',direction='Long';
-      if(isSell&&ibPnlRaw!==0){direction='Long';exit=price;entry=parseFloat((exit-(ibPnlRaw+fee)/qty).toFixed(6));status='סגורה';}
-      else if(isSell&&ibPnlRaw===0){direction='Long';exit=price;entry=closePrice||price;status='פתוחה';}
-      else{direction='Long';entry=price;exit=closePrice||0;status=exit>0?'סגורה':'פתוחה';if(exit>0)ibPnl=(exit-entry)*qty-fee;}
-      const t={date,symbol:tag.getAttribute('symbol')||'',direction,status,qty,entry,exit,fee,ibPnl,ibTradeId:ibId,source:'ib',account:p};
-      const nid=await saveTradeFS(p,{id:null,...t});
-      trades[p].push({id:nid,...t});cnt++;
+      const fee=Math.abs(parseFloat(tag.getAttribute('ibCommission')tag.getAttribute('commission')0));
+      const pnlRaw=parseFloat(tag.getAttribute('fifoPnlRealized')||0);
+
+      if(!grouped[key]){
+        grouped[key]={
+          symbol,date,
+          buyQty:0,buyValue:0,  // for avg entry
+          sellQty:0,sellValue:0, // for avg exit
+          totalFee:0,
+          realizedPnl:0,
+          execIds:[]
+        };
+      }
+      const g=grouped[key];
+      g.totalFee+=fee;
+      g.realizedPnl+=pnlRaw;
+      const execId=tag.getAttribute('tradeID')tag.getAttribute('execID')'';
+      g.execIds.push(execId);
+
+      if(!isSell){
+        g.buyQty+=qty;
+        g.buyValue+=qty*price;
+      } else {
+        g.sellQty+=qty;
+        g.sellValue+=qty*price;
+      }
     }
-    trades[p].sort((a,b)=>(a.date||'')>(b.date||'')?1:-1);
-    showSR(p,'success',`✅ סונכרן בהצלחה — ${cnt} עסקאות חדשות`);
+[10/04/2026 18:12] israel cohen: // ── Save grouped trades, skip already existing (check by symbol+date) ──
+    let cnt=0;
+    for(const key of Object.keys(grouped)){
+      const g=grouped[key];
+      // Check if this symbol+date combo already exists
+      const exists=trades[p].some(t=>t.ibGroupKey===key);
+      if(exists){
+        // Update existing trade's P&L if it changed
+        const existing=trades[p].find(t=>t.ibGroupKey===key);
+        if(existing&&Math.abs((existing.ibPnl||0)-g.realizedPnl)>0.01){
+          const avgEntry=g.buyQty>0?(g.buyValue/g.buyQty):0;
+          const avgExit=g.sellQty>0?(g.sellValue/g.sellQty):0;
+          const isClosed=g.sellQty>=g.buyQty*0.9; // 90% sold = closed
+          const updData={
+            ibPnl:parseFloat(g.realizedPnl.toFixed(2)),
+            fee:parseFloat(g.totalFee.toFixed(2)),
+            qty:Math.max(g.buyQty,g.sellQty),
+            entry:parseFloat(avgEntry.toFixed(4)),
+            exit:isClosed?parseFloat(avgExit.toFixed(4)):0,
+            status:isClosed?'סגורה':'פתוחה'
+          };
+          await db.collection('users').doc(currentUser.uid).collection(p+'_trades').doc(existing.id).update(updData);
+          Object.assign(existing,updData);
+        }
+        continue;
+      }
+
+      const avgEntry=g.buyQty>0?(g.buyValue/g.buyQty):0;
+      const avgExit=g.sellQty>0?(g.sellValue/g.sellQty):0;
+      const isClosed=g.sellQty>=g.buyQty*0.9;
+      // If IB gave us realized PnL use it, else calculate
+      let finalPnl=g.realizedPnl;
+      if(finalPnl===0&&isClosed&&avgEntry>0&&avgExit>0){
+        finalPnl=(avgExit-avgEntry)*g.buyQty-g.totalFee;
+      }
+
+      const t={
+        date:g.date,
+        symbol:g.symbol,
+        direction:'Long',
+        status:isClosed?'סגורה':'פתוחה',
+        qty:Math.max(g.buyQty,g.sellQty),
+        entry:parseFloat(avgEntry.toFixed(4)),
+        exit:isClosed?parseFloat(avgExit.toFixed(4)):0,
+        fee:parseFloat(g.totalFee.toFixed(2)),
+        ibPnl:parseFloat(finalPnl.toFixed(2)),
+        ibGroupKey:key,
+        execCount:g.execIds.length,
+        source:'ib',
+        account:p
+      };
+      const nid=await saveTradeFS(p,{id:null,...t});
+      trades[p].push({id:nid,...t});
+      cnt++;
+    }
+
+    trades[p].sort((a,b)=>(a.date'')>(b.date'')?1:-1);
+    showSR(p,'success',✅ סונכרן — ${cnt} עסקאות חדשות (מאוחדות));
     if(btn&&p===currentAccount){btn.innerHTML='⟳ סנכרן מ-IB';btn.disabled=false;}
     refresh();
   }catch(e){
@@ -622,8 +694,8 @@ async function doSync(p){
 }
 
 // ── CALC ──
-function calcPnL(t){if(t.ibPnl!==undefined&&t.ibPnl!==null&&t.ibPnl!==0)return parseFloat(t.ibPnl);if(!t.exit||!t.entry||!t.qty)return null;const r=t.direction==='Long'?(t.exit-t.entry)*t.qty:(t.entry-t.exit)*t.qty;return r-(parseFloat(t.fee)||0);}
-function calcR(t){if(!t.sl||!t.entry||!t.qty)return null;const risk=Math.abs(t.entry-t.sl)*t.qty;if(!risk)return null;const pnl=calcPnL(t);if(pnl===null)return null;return(pnl/risk).toFixed(2);}
+function calcPnL(t){if(t.ibPnl!==undefined&&t.ibPnl!==null&&t.ibPnl!==0)return parseFloat(t.ibPnl);if(!t.exit!t.entry!t.qty)return null;const r=t.direction==='Long'?(t.exit-t.entry)*t.qty:(t.entry-t.exit)*t.qty;return r-(parseFloat(t.fee)||0);}
+function calcR(t){if(!t.sl!t.entry!t.qty)return null;const risk=Math.abs(t.entry-t.sl)*t.qty;if(!risk)return null;const pnl=calcPnL(t);if(pnl===null)return null;return(pnl/risk).toFixed(2);}
 
 function getStats(tradeSet){
   const src=tradeSet||getFilteredTrades();
@@ -637,7 +709,7 @@ function getStats(tradeSet){
   const rr=avgLoss!==0?Math.abs(avgWin/avgLoss).toFixed(2):'∞';
   const openCount=src.filter(t=>t.status==='פתוחה').length;
   const rrs=closed.map(t=>parseFloat(calcR(t))).filter(r=>!isNaN(r)&&isFinite(r));
-  const avgR=rrs.length?(rrs.reduce((a,b)=>a+b,0)/rrs.length).toFixed(2):'-';
+[10/04/2026 18:12] israel cohen: const avgR=rrs.length?(rrs.reduce((a,b)=>a+b,0)/rrs.length).toFixed(2):'-';
   let peak=0,maxDD=0,cur=0;
   [...closed].sort((a,b)=>a.date>b.date?1:-1).forEach(t=>{cur+=calcPnL(t);if(cur>peak)peak=cur;const dd=peak-cur;if(dd>maxDD)maxDD=dd;});
   return{totalPnL,wins,losses,winRate,avgWin,avgLoss,pf:gl?(gw/gl).toFixed(2):'∞',closed,rr,openCount,allCount:src.length,avgR,maxDD};
@@ -651,7 +723,7 @@ function renderStats(){
   const s=getStats();
   const cap2=parseFloat(userSettings.capital)||10000;
   const ret=(s.totalPnL/cap2*100).toFixed(2);
-  document.getElementById('statsGrid').innerHTML=`
+  document.getElementById('statsGrid').innerHTML=
     <div class="stat-card"><div class="stat-label">סה"כ P&L</div><div class="stat-value ${s.totalPnL>=0?'green':'red'}">${fmt(s.totalPnL)}</div><div class="stat-delta">${ret}% תשואה</div></div>
     <div class="stat-card ${parseFloat(s.winRate)<50?'red':''}"><div class="stat-label">Win Rate</div><div class="stat-value ${parseFloat(s.winRate)>=50?'green':'red'}">${s.winRate}%</div><div class="stat-delta">${s.wins.length}W / ${s.losses.length}L</div></div>
     <div class="stat-card blue"><div class="stat-label">Profit Factor</div><div class="stat-value">${s.pf}</div><div class="stat-delta">יחס רווח/הפסד</div></div>
@@ -659,7 +731,7 @@ function renderStats(){
     <div class="stat-card"><div class="stat-label">ממוצע רווח</div><div class="stat-value green">${fmt(s.avgWin)}</div><div class="stat-delta">לעסקה מנצחת</div></div>
     <div class="stat-card red"><div class="stat-label">ממוצע הפסד</div><div class="stat-value red">${fmt(s.avgLoss)}</div><div class="stat-delta">לעסקה מפסידה</div></div>
     <div class="stat-card purple"><div class="stat-label">יחס R:R</div><div class="stat-value">${s.rr}</div><div class="stat-delta">ממוצע R: ${s.avgR}</div></div>
-    <div class="stat-card red"><div class="stat-label">Max Drawdown</div><div class="stat-value red">${s.maxDD>0?'-$'+s.maxDD.toFixed(0):'-'}</div><div class="stat-delta">ירידה מקסימלית</div></div>`;
+    <div class="stat-card red"><div class="stat-label">Max Drawdown</div><div class="stat-value red">${s.maxDD>0?'-$'+s.maxDD.toFixed(0):'-'}</div><div class="stat-delta">ירידה מקסימלית</div></div>;
 }
 
 // ── RENDER CHARTS ──
@@ -675,7 +747,7 @@ function renderCharts(){
   if(ec&&eqD.length)charts.equity=new Chart(ec,{type:'line',data:{labels:eqD.map(p=>p.x),datasets:[{data:eqD.map(p=>p.y),borderColor:currentAccount==='live'?'#00d4aa':'#ffd166',backgroundColor:currentAccount==='live'?'rgba(0,212,170,0.08)':'rgba(255,209,102,0.08)',fill:true,tension:0.3,pointRadius:2}]},options:{...CD,plugins:{legend:{display:false}}}});
   dc('winloss');const s=getStats(filtered);const wlc=document.getElementById('winLossChart');
   if(wlc)charts.winloss=new Chart(wlc,{type:'doughnut',data:{labels:['Win','Loss'],datasets:[{data:[s.wins.length,s.losses.length],backgroundColor:['rgba(0,212,170,0.8)','rgba(255,77,106,0.8)'],borderWidth:0}]},options:{responsive:true,plugins:{legend:{labels:{color:'#8892a4'}}}}});
-  dc('daily');const byDay={};closed.forEach(t=>{byDay[t.date]=(byDay[t.date]||0)+calcPnL(t);});
+[10/04/2026 18:12] israel cohen: dc('daily');const byDay={};closed.forEach(t=>{byDay[t.date]=(byDay[t.date]||0)+calcPnL(t);});
   const days=Object.keys(byDay).sort();const dc2=document.getElementById('dailyPnlChart');
   if(dc2&&days.length)charts.daily=new Chart(dc2,{type:'bar',data:{labels:days,datasets:[{label:'P&L',data:days.map(d=>byDay[d]),backgroundColor:days.map(d=>byDay[d]>=0?'rgba(0,212,170,0.7)':'rgba(255,77,106,0.7)'),borderRadius:3}]},options:CD});
 }
@@ -692,7 +764,7 @@ window.changeMonth=(dir)=>{
 };
 
 function renderCalendar(){
-  document.getElementById('calMonthLabel').textContent=`${HE_MONTHS[calMonth]} ${calYear}`;
+  document.getElementById('calMonthLabel').textContent=${HE_MONTHS[calMonth]} ${calYear};
   const dayMap={};
   trades[currentAccount].forEach(t=>{
     const d=new Date(t.date||'');
@@ -707,15 +779,15 @@ function renderCalendar(){
   const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
   const now=new Date();
   const isCurrentMonth=now.getFullYear()===calYear&&now.getMonth()===calMonth;
-  let html=HE_DAYS.map(d=>`<div class="cal-hdr">${d.slice(0,1)}</div>`).join('');
-  for(let i=0;i<firstDay;i++)html+=`<div class="cal-day empty"></div>`;
+  let html=HE_DAYS.map(d=><div class="cal-hdr">${d.slice(0,1)}</div>).join('');
+  for(let i=0;i<firstDay;i++)html+=<div class="cal-day empty"></div>;
   for(let d=1;d<=daysInMonth;d++){
     const isToday=isCurrentMonth&&d===now.getDate();
     const data=dayMap[d];
     let cls='no-trade';
     if(data)cls=data.pnl>=0?'profit':'loss';
     if(isToday)cls+=' today';
-    html+=`<div class="cal-day ${cls}"><div class="day-num">${d}</div>${data?`<div class="day-pnl">${fmtShort(data.pnl)}</div><div class="day-count">(${data.count})</div>`:''}</div>`;
+    html+=<div class="cal-day ${cls}"><div class="day-num">${d}</div>${data?<div class="day-pnl">${fmtShort(data.pnl)}</div><div class="day-count">(${data.count})</div>:''}</div>;
   }
   document.getElementById('calGrid').innerHTML=html;
   renderWeekly();
@@ -736,7 +808,7 @@ function renderWeekly(){
     weeks.push({num:wNum++,start:fmtDate(wStart),end:fmtDate(wEnd),pnl,count:wTrades.length});
     wStart=new Date(wStart);wStart.setDate(wStart.getDate()+7);
   }
-  document.getElementById('weeklyList').innerHTML=weeks.map(w=>`
+  document.getElementById('weeklyList').innerHTML=weeks.map(w=>
     <div class="week-card">
       <div>
         <div class="week-lbl">שבוע ${w.num}</div>
@@ -744,18 +816,19 @@ function renderWeekly(){
         <div class="week-trades-txt">${w.count} עסקאות</div>
       </div>
       <div class="week-pnl ${w.pnl>0?'green':w.pnl<0?'red':'zero'}">${w.count?fmtShort(w.pnl):'$0'}</div>
-    </div>`).join('');
+    </div>).join('');
 }
 function fmtDate(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');}
 
 // ── TRADES TABLE ──
 function buildTable(data,limit){
-  if(!data.length)return`<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">אין עסקאות. הוסף ידנית או סנכרן מ-IB</div></div>`;
+  if(!data.length)return<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">אין עסקאות. הוסף ידנית או סנכרן מ-IB</div></div>;
   const rows=(limit?[...data].slice(-limit).reverse():[...data].reverse()).map(t=>{
     const pnl=calcPnL(t),r=calcR(t);
-    return`<tr onclick="showDetail('${t.id}')"><td>${t.date||'-'}</td><td style="color:var(--accent);font-weight:600">${t.symbol||'-'}</td><td><span class="tag ${t.direction==='Long'?'tag-long':'tag-short'}">${t.direction}</span></td><td><span class="tag ${t.status==='פתוחה'?'tag-open':'tag-closed'}">${t.status}</span></td><td>${t.qty||'-'}</td><td>${t.entry||'-'}</td><td>${t.exit||'-'}</td><td class="${pnl>0?'pnl-pos':pnl<0?'pnl-neg':''}">${fmt(pnl)}</td><td>${r!==null?(r>0?'+':'')+r+'R':'-'}</td><td>${t.strategy||'-'}</td><td>${t.source==='ib'?'🔗':'✍️'}</td><td><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();editTrade('${t.id}')">✏️</button> <button class="btn btn-danger" onclick="event.stopPropagation();deleteTrade('${t.id}')">🗑</button></td></tr>`;
+    return`<tr onclick="showDetail('${t.id}')"><td>${t.date'-'}</td><td style="color:var(--accent);font-weight:600">${t.symbol'-'}</td><td><span class="tag ${t.direction==='Long'?'tag-long':'tag-short'}">${t.direction}</span></td><td><span class="tag
+[10/04/2026 18:12] israel cohen: ${t.status==='פתוחה'?'tag-open':'tag-closed'}">${t.status}</span></td><td>${t.qty'-'}</td><td>${t.entry'-'}</td><td>${t.exit'-'}</td><td class="${pnl>0?'pnl-pos':pnl<0?'pnl-neg':''}">${fmt(pnl)}</td><td>${r!==null?(r>0?'+':'')+r+'R':'-'}</td><td>${t.strategy'-'}</td><td>${t.source==='ib'?'🔗':'✍️'}</td><td><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();editTrade('${t.id}')">✏️</button> <button class="btn btn-danger" onclick="event.stopPropagation();deleteTrade('${t.id}')">🗑</button></td></tr>;
   }).join('');
-  return`<table><thead><tr><th>תאריך</th><th>סמל</th><th>כיוון</th><th>סטטוס</th><th>כמות</th><th>כניסה</th><th>יציאה</th><th>P&L</th><th>R:R</th><th>סטרטגיה</th><th>מקור</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+  return<table><thead><tr><th>תאריך</th><th>סמל</th><th>כיוון</th><th>סטטוס</th><th>כמות</th><th>כניסה</th><th>יציאה</th><th>P&L</th><th>R:R</th><th>סטרטגיה</th><th>מקור</th><th></th></tr></thead><tbody>${rows}</tbody></table>;
 }
 function renderRecentTrades(){document.getElementById('recentTradesTable').innerHTML=buildTable(getFilteredTrades(),8);}
 function getFiltered(){
@@ -777,7 +850,7 @@ window.renderTradesTable=()=>{
   const f=getFiltered();
   document.getElementById('allTradesTable').innerHTML=buildTable(f,0);
   const total=f.filter(t=>t.status==='סגורה').reduce((s,t)=>s+(calcPnL(t)||0),0);
-  document.getElementById('tableSummary').innerHTML=`<span>מוצג: ${f.length}</span> | <span style="color:${total>=0?'var(--green)':'var(--red)'}">${fmt(total)}</span>`;
+  document.getElementById('tableSummary').innerHTML=<span>מוצג: ${f.length}</span> | <span style="color:${total>=0?'var(--green)':'var(--red)'}">${fmt(total)}</span>`;
 };
 window.clearFilters=()=>{['filterSymbol','filterDir','filterStatus','filterFrom','filterTo'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});window.renderTradesTable();};
 
@@ -798,10 +871,10 @@ function renderAnalytics(){
   const bk=Object.keys(bkts).sort((a,b)=>a-b);const rrc=document.getElementById('rrChart');
   if(rrc&&bk.length)charts.rr=new Chart(rrc,{type:'bar',data:{labels:bk.map(k=>k+'R'),datasets:[{label:'תדירות',data:bk.map(k=>bkts[k]),backgroundColor:'rgba(0,149,255,0.6)',borderRadius:4}]},options:CD});
   dc('monthly');const byM={};closed.forEach(t=>{if(t.date){const m=t.date.slice(0,7);byM[m]=(byM[m]||0)+calcPnL(t);}});
-  const ms=Object.keys(byM).sort();const mc=document.getElementById('monthlyChart');
+[10/04/2026 18:12] israel cohen: const ms=Object.keys(byM).sort();const mc=document.getElementById('monthlyChart');
   if(mc&&ms.length)charts.monthly=new Chart(mc,{type:'bar',data:{labels:ms,datasets:[{label:'P&L',data:ms.map(m=>byM[m]),backgroundColor:ms.map(m=>byM[m]>=0?'rgba(255,209,102,0.7)':'rgba(255,77,106,0.7)'),borderRadius:4}]},options:CD});
   const s=getStats(filtered);
-  document.getElementById('analyticsStats').innerHTML=`
+  document.getElementById('analyticsStats').innerHTML=
     <div class="stat-card red"><div class="stat-label">Max Drawdown</div><div class="stat-value red">${s.maxDD>0?'-$'+s.maxDD.toFixed(0):'-'}</div></div>
     <div class="stat-card"><div class="stat-label">ממוצע R:R</div><div class="stat-value">${s.avgR}R</div></div>
     <div class="stat-card blue"><div class="stat-label">Profit Factor</div><div class="stat-value">${s.pf}</div></div>
@@ -809,7 +882,7 @@ function renderAnalytics(){
     <div class="stat-card"><div class="stat-label">יחס R:R (ממוצע)</div><div class="stat-value">${s.rr}</div><div class="stat-delta">רווח/הפסד ממוצע</div></div>
     <div class="stat-card"><div class="stat-label">ממוצע רווח</div><div class="stat-value green">${fmt(s.avgWin)}</div></div>
     <div class="stat-card red"><div class="stat-label">ממוצע הפסד</div><div class="stat-value red">${fmt(s.avgLoss)}</div></div>
-    <div class="stat-card"><div class="stat-label">Win Rate</div><div class="stat-value ${parseFloat(s.winRate)>=50?'green':'red'}">${s.winRate}%</div></div>`;
+    <div class="stat-card"><div class="stat-label">Win Rate</div><div class="stat-value ${parseFloat(s.winRate)>=50?'green':'red'}">${s.winRate}%</div></div>;
 }
 
 // ── NAV ──
@@ -843,7 +916,7 @@ window.saveGeneralSettings=async()=>{
 // ── MODAL ──
 window.openAddModal=()=>{
   editingId=null;
-  document.getElementById('modalTitle').textContent=`➕ עסקה חדשה [${currentAccount.toUpperCase()}]`;
+  document.getElementById('modalTitle').textContent=➕ עסקה חדשה [${currentAccount.toUpperCase()}];
   document.getElementById('f-date').value=new Date().toISOString().slice(0,10);
   ['f-symbol','f-qty','f-entry','f-exit','f-sl','f-tp','f-fee','f-strategy','f-notes','f-rating'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f-direction').value='Long';
@@ -853,15 +926,15 @@ window.openAddModal=()=>{
 window.editTrade=(id)=>{
   const t=trades[currentAccount].find(x=>x.id===id);if(!t)return;
   editingId=id;
-  document.getElementById('modalTitle').textContent=`✏️ עריכה [${currentAccount.toUpperCase()}]`;
+  document.getElementById('modalTitle').textContent=✏️ עריכה [${currentAccount.toUpperCase()}];
   ['date','symbol','direction','status','qty','entry','exit','sl','tp','fee','strategy','rating','notes'].forEach(f=>{const el=document.getElementById('f-'+f);if(el)el.value=t[f]||'';});
-  document.getElementById('tradeModal').classList.add('open');
+[10/04/2026 18:12] israel cohen: document.getElementById('tradeModal').classList.add('open');
 };
 window.closeModal=()=>{document.getElementById('tradeModal').classList.remove('open');document.getElementById('detailModal').classList.remove('open');};
 window.saveTrade=async()=>{
   const symbol=document.getElementById('f-symbol').value.toUpperCase().trim();
   if(!symbol){alert('נא להזין סמל');return;}
-  const t={date:document.getElementById('f-date').value,symbol,direction:document.getElementById('f-direction').value,status:document.getElementById('f-status').value,qty:parseFloat(document.getElementById('f-qty').value)||0,entry:parseFloat(document.getElementById('f-entry').value)||0,exit:parseFloat(document.getElementById('f-exit').value)||0,sl:parseFloat(document.getElementById('f-sl').value)||0,tp:parseFloat(document.getElementById('f-tp').value)||0,fee:parseFloat(document.getElementById('f-fee').value)||0,strategy:document.getElementById('f-strategy').value,rating:parseInt(document.getElementById('f-rating').value)||0,notes:document.getElementById('f-notes').value,source:'manual',account:currentAccount};
+  const t={date:document.getElementById('f-date').value,symbol,direction:document.getElementById('f-direction').value,status:document.getElementById('f-status').value,qty:parseFloat(document.getElementById('f-qty').value)0,entry:parseFloat(document.getElementById('f-entry').value)0,exit:parseFloat(document.getElementById('f-exit').value)0,sl:parseFloat(document.getElementById('f-sl').value)0,tp:parseFloat(document.getElementById('f-tp').value)0,fee:parseFloat(document.getElementById('f-fee').value)0,strategy:document.getElementById('f-strategy').value,rating:parseInt(document.getElementById('f-rating').value)||0,notes:document.getElementById('f-notes').value,source:'manual',account:currentAccount};
   if(editingId){await saveTradeFS(currentAccount,{id:editingId,...t});const idx=trades[currentAccount].findIndex(x=>x.id===editingId);if(idx!==-1)trades[currentAccount][idx]={id:editingId,...t};}
   else{const nid=await saveTradeFS(currentAccount,{id:null,...t});trades[currentAccount].push({id:nid,...t});}
   window.closeModal();refresh();
@@ -870,17 +943,17 @@ window.deleteTrade=async(id)=>{if(!confirm('למחוק?'))return;await deleteTra
 window.showDetail=(id)=>{
   const t=trades[currentAccount].find(x=>x.id===id);if(!t)return;
   const pnl=calcPnL(t),r=calcR(t);
-  document.getElementById('detailContent').innerHTML=`<div class="modal-title"><span style="color:var(--accent)">${t.symbol} <span style="font-size:11px;color:var(--text3)">[${currentAccount.toUpperCase()}]</span></span><button class="close-btn" onclick="closeModal()">✕</button></div><div class="detail-grid"><div class="detail-item"><div class="detail-label">תאריך</div><div class="detail-val">${t.date||'-'}</div></div><div class="detail-item"><div class="detail-label">כיוון</div><div class="detail-val">${t.direction}</div></div><div class="detail-item"><div class="detail-label">כמות</div><div class="detail-val">${t.qty||'-'}</div></div><div class="detail-item"><div class="detail-label">כניסה</div><div class="detail-val">${t.entry||'-'}</div></div><div class="detail-item"><div class="detail-label">יציאה</div><div class="detail-val">${t.exit||'-'}</div></div><div class="detail-item"><div class="detail-label">P&L</div><div class="detail-val ${pnl>0?'pnl-pos':pnl<0?'pnl-neg':''}" style="font-size:19px">${fmt(pnl)}</div></div><div class="detail-item"><div class="detail-label">R:R</div><div class="detail-val">${r!==null?r+'R':'-'}</div></div><div class="detail-item"><div class="detail-label">עמלה</div><div class="detail-val">${fmt(t.fee)}</div></div><div class="detail-item"><div class="detail-label">סטרטגיה</div><div class="detail-val">${t.strategy||'-'}</div></div><div class="detail-item"><div class="detail-label">מקור</div><div class="detail-val">${t.source==='ib'?'🔗 IB':'✍️ ידני'}</div></div></div>${t.notes?`<div class="detail-label">הערות</div><div class="notes-box">${t.notes}</div>`:''}<div style="margin-top:16px;display:flex;gap:9px;justify-content:flex-end"><button class="btn btn-outline" onclick="closeModal();editTrade('${t.id}')">✏️ ערוך</button><button class="btn btn-danger" onclick="closeModal();deleteTrade('${t.id}')">🗑 מחק</button></div>`;
+  document.getElementById('detailContent').innerHTML=<div class="modal-title"><span style="color:var(--accent)">${t.symbol} <span style="font-size:11px;color:var(--text3)">[${currentAccount.toUpperCase()}]</span></span><button class="close-btn" onclick="closeModal()">✕</button></div><div class="detail-grid"><div class="detail-item"><div class="detail-label">תאריך</div><div class="detail-val">${t.date||'-'}</div></div><div class="detail-item"><div class="detail-label">כיוון</div><div class="detail-val">${t.direction}</div></div><div class="detail-item"><div class="detail-label">כמות</div><div class="detail-val">${t.qty||'-'}</div></div><div class="detail-item"><div class="detail-label">כניסה</div><div class="detail-val">${t.entry||'-'}</div></div><div class="detail-item"><div class="detail-label">יציאה</div><div class="detail-val">${t.exit||'-'}</div></div><div class="detail-item"><div class="detail-label">P&L</div><div class="detail-val ${pnl>0?'pnl-pos':pnl<0?'pnl-neg':''}" style="font-size:19px">${fmt(pnl)}</div></div><div class="detail-item"><div class="detail-label">R:R</div><div class="detail-val">${r!==null?r+'R':'-'}</div></div><div class="detail-item"><div class="detail-label">עמלה</div><div class="detail-val">${fmt(t.fee)}</div></div><div class="detail-item"><div class="detail-label">סטרטגיה</div><div class="detail-val">${t.strategy||'-'}</div></div><div class="detail-item"><div class="detail-label">מקור</div><div class="detail-val">${t.source==='ib'?'🔗 IB':'✍️ ידני'}</div></div></div>${t.notes?<div class="detail-label">הערות</div><div class="notes-box">${t.notes}</div>:''}<div style="margin-top:16px;display:flex;gap:9px;justify-content:flex-end"><button class="btn btn-outline" onclick="closeModal();editTrade('${t.id}')">✏️ ערוך</button><button class="btn btn-danger" onclick="closeModal();deleteTrade('${t.id}')">🗑 מחק</button></div>;
   document.getElementById('detailModal').classList.add('open');
 };
 
 // ── EXPORT/IMPORT ──
 window.exportCSV=()=>{
   const h=['date','symbol','direction','status','qty','entry','exit','sl','tp','fee','strategy','rating','pnl'];
-  const rows=trades[currentAccount].map(t=>h.map(k=>{if(k==='pnl')return(calcPnL(t)||'').toString();return(t[k]||'').toString().replace(/,/g,';');}).join(','));
+[10/04/2026 18:12] israel cohen: const rows=trades[currentAccount].map(t=>h.map(k=>{if(k==='pnl')return(calcPnL(t)'').toString();return(t[k]'').toString().replace(/,/g,';');}).join(','));
   const csv=[h.join(','),...rows].join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
-  a.download=`trade_report_${currentAccount}_${new Date().toISOString().slice(0,10)}.csv`;a.click();
+  a.download=trade_report_${currentAccount}_${new Date().toISOString().slice(0,10)}.csv;a.click();
 };
 window.importCSV=(input)=>{
   const file=input.files[0];if(!file)return;
@@ -888,17 +961,46 @@ window.importCSV=(input)=>{
   reader.onload=async e=>{
     const lines=e.target.result.split('\n').filter(Boolean);const headers=lines[0].split(',');
     const imported=lines.slice(1).map(line=>{const cols=line.split(',');const obj={source:'manual',account:currentAccount};headers.forEach((h,i)=>{if(h!=='pnl')obj[h.trim()]=(cols[i]||'').trim();});return obj;});
-    if(confirm(`ייבא ${imported.length} עסקאות ל-${currentAccount.toUpperCase()}?`)){
+    if(confirm(ייבא ${imported.length} עסקאות ל-${currentAccount.toUpperCase()}?)){
       for(const t of imported){const id=await saveTradeFS(currentAccount,{id:null,...t});trades[currentAccount].push({id,...t});}
       refresh();
     }
   };reader.readAsText(file,'UTF-8');
 };
 window.clearAll=async()=>{
-  if(!confirm(`למחוק את כל עסקאות ${currentAccount.toUpperCase()}?`))return;
+  if(!confirm(למחוק את כל עסקאות ${currentAccount.toUpperCase()}?))return;
   if(!confirm('בטוח לחלוטין?'))return;
   for(const t of trades[currentAccount])await deleteTradeFS(currentAccount,t.id);
   trades[currentAccount]=[];refresh();
+};
+
+// ── DEDUP: remove old per-execution trades, keep only grouped ──
+window.dedupTrades=async()=>{
+  if(!confirm('זה ימחק עסקאות IB ישנות (כפילויות) וישאיר רק עסקאות מאוחדות. להמשיך?'))return;
+  const p=currentAccount;
+  // Group existing IB trades by symbol+date, keep only the one with ibGroupKey
+  const toDelete=[];
+  const seen={};
+  for(const t of trades[p]){
+    if(t.source!=='ib')continue;
+    const key=t.ibGroupKey||(t.symbol+'_'+t.date);
+    if(t.ibGroupKey){
+      // Already grouped — keep, mark key as seen
+      seen[key]=(seen[key]||0)+1;
+      if(seen[key]>1)toDelete.push(t); // duplicate grouped
+    } else {
+      // Old format (per-execution) — delete
+      toDelete.push(t);
+    }
+  }
+  if(!toDelete.length){alert('אין כפילויות למחוק ✅');return;}
+  if(!confirm(נמצאו ${toDelete.length} רשומות לניקוי. למחוק?))return;
+  for(const t of toDelete){
+    await deleteTradeFS(p,t.id);
+    trades[p]=trades[p].filter(x=>x.id!==t.id);
+  }
+  alert(✅ נוקו ${toDelete.length} כפילויות. מומלץ לסנכרן מחדש מ-IB.);
+  refresh();
 };
 
 // ── REFRESH ──
