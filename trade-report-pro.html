@@ -383,6 +383,7 @@
           <button class="btn btn-outline" onclick="exportCSV()">⬇ ייצוא CSV</button>
           <label class="btn btn-outline" style="cursor:pointer">⬆ ייבוא CSV<input type="file" accept=".csv" style="display:none" onchange="importCSV(this)"></label>
           <button class="btn btn-danger" onclick="clearAll()">🗑 מחק הכל</button>
+          <button class="btn btn-outline" onclick="dedupTrades()" style="border-color:var(--yellow);color:var(--yellow)">🔧 מחק כפילויות IB</button>
         </div>
       </div>
     </div>
@@ -588,31 +589,87 @@ async function doSync(p){
     await new Promise(r=>setTimeout(r,3000));
     const r2=await fetch(proxy+encodeURIComponent(`https://gdcdyn.interactivebrokers.com/Universal/servlet/FlexStatementService.GetStatement?q=${ref}&t=${token}&v=3`));
     const xml2=(new DOMParser()).parseFromString(await r2.text(),'text/xml');
-    const tags=xml2.querySelectorAll('Trade');
+    const tags=Array.from(xml2.querySelectorAll('Trade'));
     if(!tags.length)throw new Error('לא נמצאו עסקאות בתגובה מ-IB');
-    let cnt=0;
+
+    // ── Step 1: parse all executions ──
+    const execs=[];
     for(const tag of tags){
-      const ibId=tag.getAttribute('tradeID')||tag.getAttribute('execID')||'';
-      if(trades[p].some(t=>t.ibTradeId===ibId))continue;
+      const symbol=tag.getAttribute('symbol')||'';
       const dateRaw=tag.getAttribute('dateTime')||tag.getAttribute('tradeDate')||'';
       const date=dateRaw.slice(0,8).replace(/(\d{4})(\d{2})(\d{2})/,'$1-$2-$3');
-      const buySell=tag.getAttribute('buySell')||'BUY';
+      const buySell=(tag.getAttribute('buySell')||'BUY').toUpperCase();
       const isSell=(buySell==='SELL'||buySell==='SLD');
       const qty=Math.abs(parseFloat(tag.getAttribute('quantity')||0));
       const price=parseFloat(tag.getAttribute('tradePrice')||0);
       const fee=Math.abs(parseFloat(tag.getAttribute('ibCommission')||tag.getAttribute('commission')||0));
-      const ibPnlRaw=parseFloat(tag.getAttribute('fifoPnlRealized')||0);
-      const closePrice=parseFloat(tag.getAttribute('closePrice')||0);
-      let entry=price,exit=0,ibPnl=ibPnlRaw,status='פתוחה',direction='Long';
-      if(isSell&&ibPnlRaw!==0){direction='Long';exit=price;entry=parseFloat((exit-(ibPnlRaw+fee)/qty).toFixed(6));status='סגורה';}
-      else if(isSell&&ibPnlRaw===0){direction='Long';exit=price;entry=closePrice||price;status='פתוחה';}
-      else{direction='Long';entry=price;exit=closePrice||0;status=exit>0?'סגורה':'פתוחה';if(exit>0)ibPnl=(exit-entry)*qty-fee;}
-      const t={date,symbol:tag.getAttribute('symbol')||'',direction,status,qty,entry,exit,fee,ibPnl,ibTradeId:ibId,source:'ib',account:p};
-      const nid=await saveTradeFS(p,{id:null,...t});
-      trades[p].push({id:nid,...t});cnt++;
+      const pnl=parseFloat(tag.getAttribute('fifoPnlRealized')||0);
+      execs.push({symbol,date,isSell,qty,price,fee,pnl});
     }
+
+    // ── Step 2: group by symbol+date ──
+    const groups={};
+    for(const e of execs){
+      const key=e.symbol+'_'+e.date;
+      if(!groups[key]) groups[key]={symbol:e.symbol,date:e.date,buys:[],sells:[],totalFee:0,realizedPnl:0};
+      const g=groups[key];
+      g.totalFee+=e.fee;
+      g.realizedPnl+=e.pnl; // IB puts realized P&L on sell executions
+      if(!e.isSell) g.buys.push({qty:e.qty,price:e.price});
+      else          g.sells.push({qty:e.qty,price:e.price});
+    }
+
+    // ── Step 3: delete all existing IB trades for this account, then re-save ──
+    // (removes duplicates from previous bad syncs)
+    const ibTrades=trades[p].filter(t=>t.source==='ib');
+    for(const t of ibTrades){
+      await deleteTradeFS(p,t.id);
+    }
+    trades[p]=trades[p].filter(t=>t.source!=='ib');
+
+    // ── Step 4: save one clean trade per group ──
+    let cnt=0;
+    for(const key of Object.keys(groups)){
+      const g=groups[key];
+      // weighted avg entry
+      const totalBuyQty=g.buys.reduce((s,x)=>s+x.qty,0);
+      const totalBuyVal=g.buys.reduce((s,x)=>s+x.qty*x.price,0);
+      const avgEntry=totalBuyQty>0?totalBuyVal/totalBuyQty:0;
+      // weighted avg exit
+      const totalSellQty=g.sells.reduce((s,x)=>s+x.qty,0);
+      const totalSellVal=g.sells.reduce((s,x)=>s+x.qty*x.price,0);
+      const avgExit=totalSellQty>0?totalSellVal/totalSellQty:0;
+
+      const tradeQty=totalBuyQty||totalSellQty;
+      const isClosed=totalSellQty>0&&totalSellQty>=totalBuyQty*0.85;
+
+      // Use IB's realizedPnl if available, else calculate
+      let finalPnl=g.realizedPnl;
+      if(Math.abs(finalPnl)<0.001&&isClosed&&avgEntry>0&&avgExit>0){
+        finalPnl=(avgExit-avgEntry)*Math.min(totalBuyQty,totalSellQty)-g.totalFee;
+      }
+
+      const t={
+        date:g.date,
+        symbol:g.symbol,
+        direction:'Long',
+        status:isClosed?'סגורה':'פתוחה',
+        qty:parseFloat(tradeQty.toFixed(0)),
+        entry:parseFloat(avgEntry.toFixed(4)),
+        exit:isClosed?parseFloat(avgExit.toFixed(4)):0,
+        fee:parseFloat(g.totalFee.toFixed(2)),
+        ibPnl:parseFloat(finalPnl.toFixed(2)),
+        ibGroupKey:key,
+        source:'ib',
+        account:p
+      };
+      const nid=await saveTradeFS(p,{id:null,...t});
+      trades[p].push({id:nid,...t});
+      cnt++;
+    }
+
     trades[p].sort((a,b)=>(a.date||'')>(b.date||'')?1:-1);
-    showSR(p,'success',`✅ סונכרן בהצלחה — ${cnt} עסקאות חדשות`);
+    showSR(p,'success',`✅ סונכרן — ${cnt} עסקאות (שורה אחת לכל סמל ליום)`);
     if(btn&&p===currentAccount){btn.innerHTML='⟳ סנכרן מ-IB';btn.disabled=false;}
     refresh();
   }catch(e){
@@ -899,6 +956,35 @@ window.clearAll=async()=>{
   if(!confirm('בטוח לחלוטין?'))return;
   for(const t of trades[currentAccount])await deleteTradeFS(currentAccount,t.id);
   trades[currentAccount]=[];refresh();
+};
+
+// ── DEDUP: remove old per-execution trades, keep only grouped ──
+window.dedupTrades=async()=>{
+  if(!confirm('זה ימחק עסקאות IB ישנות (כפילויות) וישאיר רק עסקאות מאוחדות. להמשיך?'))return;
+  const p=currentAccount;
+  // Group existing IB trades by symbol+date, keep only the one with ibGroupKey
+  const toDelete=[];
+  const seen={};
+  for(const t of trades[p]){
+    if(t.source!=='ib')continue;
+    const key=t.ibGroupKey||(t.symbol+'_'+t.date);
+    if(t.ibGroupKey){
+      // Already grouped — keep, mark key as seen
+      seen[key]=(seen[key]||0)+1;
+      if(seen[key]>1)toDelete.push(t); // duplicate grouped
+    } else {
+      // Old format (per-execution) — delete
+      toDelete.push(t);
+    }
+  }
+  if(!toDelete.length){alert('אין כפילויות למחוק ✅');return;}
+  if(!confirm(`נמצאו ${toDelete.length} רשומות לניקוי. למחוק?`))return;
+  for(const t of toDelete){
+    await deleteTradeFS(p,t.id);
+    trades[p]=trades[p].filter(x=>x.id!==t.id);
+  }
+  alert(`✅ נוקו ${toDelete.length} כפילויות. מומלץ לסנכרן מחדש מ-IB.`);
+  refresh();
 };
 
 // ── REFRESH ──
