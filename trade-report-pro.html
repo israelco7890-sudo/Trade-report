@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trading Journal Pro</title>
+<title>Trade Report Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans+Hebrew:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -208,21 +208,21 @@
 <!-- AUTH -->
 <div id="authScreen">
   <div class="auth-box">
-    <div class="auth-logo">TRADING JOURNAL PRO</div>
+    <div class="auth-logo">TRADE REPORT</div>
     <div class="auth-sub">PRO · יומן מסחר מקצועי</div>
     <div class="auth-tabs">
-      <button class="auth-tab active" id="tabLogin">התחברות</button>
-      <button class="auth-tab" id="tabRegister">הרשמה</button>
+      <button class="auth-tab active" onclick="switchAuthTab('login',this)">התחברות</button>
+      <button class="auth-tab" onclick="switchAuthTab('register',this)">הרשמה</button>
     </div>
     <div id="loginForm">
       <div class="auth-input-group"><label>אימייל</label><input type="email" id="loginEmail" placeholder="trader@email.com"></div>
-      <div class="auth-input-group"><label>סיסמה</label><input type="password" id="loginPass" placeholder="••••••••"></div>
-      <button class="auth-btn" id="btnLogin">כניסה →</button>
+      <div class="auth-input-group"><label>סיסמה</label><input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="auth-btn" onclick="doLogin()">כניסה →</button>
     </div>
     <div id="registerForm" style="display:none">
       <div class="auth-input-group"><label>אימייל</label><input type="email" id="regEmail" placeholder="trader@email.com"></div>
-      <div class="auth-input-group"><label>סיסמה (מינימום 6 תווים)</label><input type="password" id="regPass" placeholder="••••••••"></div>
-      <button class="auth-btn" id="btnRegister">צור חשבון →</button>
+      <div class="auth-input-group"><label>סיסמה (מינימום 6 תווים)</label><input type="password" id="regPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doRegister()"></div>
+      <button class="auth-btn" onclick="doRegister()">צור חשבון →</button>
     </div>
     <div class="auth-error" id="authError"></div>
   </div>
@@ -235,7 +235,7 @@
   <header>
     <div class="logo">
       <div class="logo-icon">📊</div>
-      <div><div class="logo-text">TRADING JOURNAL PRO</div><div class="logo-sub">יומן מסחר מקצועי</div></div>
+      <div><div class="logo-text">TRADE REPORT PRO</div><div class="logo-sub">יומן מסחר מקצועי</div></div>
     </div>
     <div class="header-right">
       <div class="account-switcher">
@@ -383,7 +383,6 @@
           <button class="btn btn-outline" onclick="exportCSV()">⬇ ייצוא CSV</button>
           <label class="btn btn-outline" style="cursor:pointer">⬆ ייבוא CSV<input type="file" accept=".csv" style="display:none" onchange="importCSV(this)"></label>
           <button class="btn btn-danger" onclick="clearAll()">🗑 מחק הכל</button>
-          <button class="btn btn-outline" onclick="dedupTrades()" style="border-color:var(--yellow);color:var(--yellow)">🔧 מחק כפילויות IB</button>
         </div>
       </div>
     </div>
@@ -420,27 +419,10 @@
 <div class="modal-backdrop" id="detailModal"><div class="modal" id="detailContent"></div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script>
-// Load Firebase compat scripts and then init app
-(function(){
-  const scripts=[
-    'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js',
-    'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js',
-    'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js'
-  ];
-  let loaded=0;
-  scripts.forEach(src=>{
-    const s=document.createElement('script');
-    s.src=src;
-    s.onload=()=>{loaded++;if(loaded===scripts.length)window._firebaseReady&&window._firebaseReady();};
-    s.onerror=()=>{document.getElementById('authError').textContent='שגיאת טעינה — בדוק חיבור לאינטרנט';};
-    document.head.appendChild(s);
-  });
-})();
-</script>
-<script>
-
-window._firebaseReady = function(){
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyDXmEjzJRLTOoF4XxgD6nElw9x2XtRnrZk",
@@ -450,9 +432,9 @@ const firebaseConfig = {
   messagingSenderId:"1091130791272",
   appId:"1:1091130791272:web:f61c1070dc04c6acfbf2dd"
 };
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getFirestore(fbApp);
 
 let currentUser=null, currentAccount='live';
 let trades={live:[],demo:[]};
@@ -463,34 +445,28 @@ let editingId=null;
 let dateFilter='week';
 let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
 
-// ── AUTH event listeners (set after DOM ready, inside module) ──
-function switchAuthTab(tab){
+// ── AUTH ──
+window.switchAuthTab=(tab,btn)=>{
   document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('active'));
-  document.getElementById(tab==='login'?'tabLogin':'tabRegister').classList.add('active');
+  btn.classList.add('active');
   document.getElementById('loginForm').style.display=tab==='login'?'block':'none';
   document.getElementById('registerForm').style.display=tab==='register'?'block':'none';
   document.getElementById('authError').textContent='';
-}
-async function doLogin(){
+};
+window.doLogin=async()=>{
   document.getElementById('authError').textContent='';
-  try{await auth.signInWithEmailAndPassword(document.getElementById('loginEmail').value,document.getElementById('loginPass').value);}
+  try{await signInWithEmailAndPassword(auth,document.getElementById('loginEmail').value,document.getElementById('loginPass').value);}
   catch(e){document.getElementById('authError').textContent=xlateErr(e.code);}
-}
-async function doRegister(){
+};
+window.doRegister=async()=>{
   document.getElementById('authError').textContent='';
-  try{await auth.createUserWithEmailAndPassword(document.getElementById('regEmail').value,document.getElementById('regPass').value);}
+  try{await createUserWithEmailAndPassword(auth,document.getElementById('regEmail').value,document.getElementById('regPass').value);}
   catch(e){document.getElementById('authError').textContent=xlateErr(e.code);}
-}
-document.getElementById('btnLogin').addEventListener('click',doLogin);
-document.getElementById('btnRegister').addEventListener('click',doRegister);
-document.getElementById('tabLogin').addEventListener('click',()=>switchAuthTab('login'));
-document.getElementById('tabRegister').addEventListener('click',()=>switchAuthTab('register'));
-document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-document.getElementById('regPass').addEventListener('keydown',e=>{if(e.key==='Enter')doRegister();});
-window.doLogout=async()=>{await auth.signOut();};
+};
+window.doLogout=async()=>{await signOut(auth);};
 function xlateErr(c){return({'auth/email-already-in-use':'אימייל כבר קיים','auth/weak-password':'סיסמה חלשה מדי','auth/user-not-found':'משתמש לא נמצא','auth/wrong-password':'סיסמה שגויה','auth/invalid-email':'אימייל לא תקין','auth/invalid-credential':'אימייל או סיסמה שגויים'}[c]||'שגיאה: '+c);}
 
-auth.onAuthStateChanged(async user=>{
+onAuthStateChanged(auth,async user=>{
   if(user){
     currentUser=user;
     document.getElementById('authScreen').style.display='none';
@@ -539,23 +515,18 @@ function getFilteredTrades(){
 
 // ── FIRESTORE ──
 async function loadUserData(){
-  const sd=await db.collection('users').doc(currentUser.uid).collection('data').doc('settings').get();
-  if(sd.exists){const d=sd.data();userSettings=d.general||{capital:10000,currency:'USD'};ibProfiles=d.ibProfiles||{live:{token:'',queryId:''},demo:{token:'',queryId:''}};}
+  const sd=await getDoc(doc(db,'users',currentUser.uid,'data','settings'));
+  if(sd.exists()){const d=sd.data();userSettings=d.general||{capital:10000,currency:'USD'};ibProfiles=d.ibProfiles||{live:{token:'',queryId:''},demo:{token:'',queryId:''}};}
   for(const acc of['live','demo']){
-    const snap=await db.collection('users').doc(currentUser.uid).collection(acc+'_trades').get();
+    const snap=await getDocs(collection(db,'users',currentUser.uid,acc+'_trades'));
     trades[acc]=snap.docs.map(d=>({id:d.id,...d.data()}));
     trades[acc].sort((a,b)=>(a.date||'')>(b.date||'')?1:-1);
   }
   updateSyncStatus();
 }
-async function saveTradeFS(acc,t){
-  const{id,...data}=t;
-  const col=db.collection('users').doc(currentUser.uid).collection(acc+'_trades');
-  if(id){await col.doc(id).set(data);return id;}
-  const ref=await col.add(data);return ref.id;
-}
-async function deleteTradeFS(acc,id){await db.collection('users').doc(currentUser.uid).collection(acc+'_trades').doc(id).delete();}
-async function saveSettings(){await db.collection('users').doc(currentUser.uid).collection('data').doc('settings').set({general:userSettings,ibProfiles});}
+async function saveTradeFS(acc,t){const{id,...data}=t;if(id){await setDoc(doc(db,'users',currentUser.uid,acc+'_trades',id),data);return id;}const ref=await addDoc(collection(db,'users',currentUser.uid,acc+'_trades'),data);return ref.id;}
+async function deleteTradeFS(acc,id){await deleteDoc(doc(db,'users',currentUser.uid,acc+'_trades',id));}
+async function saveSettings(){await setDoc(doc(db,'users',currentUser.uid,'data','settings'),{general:userSettings,ibProfiles});}
 
 // ── IB SYNC ──
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -589,87 +560,31 @@ async function doSync(p){
     await new Promise(r=>setTimeout(r,3000));
     const r2=await fetch(proxy+encodeURIComponent(`https://gdcdyn.interactivebrokers.com/Universal/servlet/FlexStatementService.GetStatement?q=${ref}&t=${token}&v=3`));
     const xml2=(new DOMParser()).parseFromString(await r2.text(),'text/xml');
-    const tags=Array.from(xml2.querySelectorAll('Trade'));
+    const tags=xml2.querySelectorAll('Trade');
     if(!tags.length)throw new Error('לא נמצאו עסקאות בתגובה מ-IB');
-
-    // ── Step 1: parse all executions ──
-    const execs=[];
+    let cnt=0;
     for(const tag of tags){
-      const symbol=tag.getAttribute('symbol')||'';
+      const ibId=tag.getAttribute('tradeID')||tag.getAttribute('execID')||'';
+      if(trades[p].some(t=>t.ibTradeId===ibId))continue;
       const dateRaw=tag.getAttribute('dateTime')||tag.getAttribute('tradeDate')||'';
       const date=dateRaw.slice(0,8).replace(/(\d{4})(\d{2})(\d{2})/,'$1-$2-$3');
-      const buySell=(tag.getAttribute('buySell')||'BUY').toUpperCase();
+      const buySell=tag.getAttribute('buySell')||'BUY';
       const isSell=(buySell==='SELL'||buySell==='SLD');
       const qty=Math.abs(parseFloat(tag.getAttribute('quantity')||0));
       const price=parseFloat(tag.getAttribute('tradePrice')||0);
       const fee=Math.abs(parseFloat(tag.getAttribute('ibCommission')||tag.getAttribute('commission')||0));
-      const pnl=parseFloat(tag.getAttribute('fifoPnlRealized')||0);
-      execs.push({symbol,date,isSell,qty,price,fee,pnl});
-    }
-
-    // ── Step 2: group by symbol+date ──
-    const groups={};
-    for(const e of execs){
-      const key=e.symbol+'_'+e.date;
-      if(!groups[key]) groups[key]={symbol:e.symbol,date:e.date,buys:[],sells:[],totalFee:0,realizedPnl:0};
-      const g=groups[key];
-      g.totalFee+=e.fee;
-      g.realizedPnl+=e.pnl; // IB puts realized P&L on sell executions
-      if(!e.isSell) g.buys.push({qty:e.qty,price:e.price});
-      else          g.sells.push({qty:e.qty,price:e.price});
-    }
-
-    // ── Step 3: delete all existing IB trades for this account, then re-save ──
-    // (removes duplicates from previous bad syncs)
-    const ibTrades=trades[p].filter(t=>t.source==='ib');
-    for(const t of ibTrades){
-      await deleteTradeFS(p,t.id);
-    }
-    trades[p]=trades[p].filter(t=>t.source!=='ib');
-
-    // ── Step 4: save one clean trade per group ──
-    let cnt=0;
-    for(const key of Object.keys(groups)){
-      const g=groups[key];
-      // weighted avg entry
-      const totalBuyQty=g.buys.reduce((s,x)=>s+x.qty,0);
-      const totalBuyVal=g.buys.reduce((s,x)=>s+x.qty*x.price,0);
-      const avgEntry=totalBuyQty>0?totalBuyVal/totalBuyQty:0;
-      // weighted avg exit
-      const totalSellQty=g.sells.reduce((s,x)=>s+x.qty,0);
-      const totalSellVal=g.sells.reduce((s,x)=>s+x.qty*x.price,0);
-      const avgExit=totalSellQty>0?totalSellVal/totalSellQty:0;
-
-      const tradeQty=totalBuyQty||totalSellQty;
-      const isClosed=totalSellQty>0&&totalSellQty>=totalBuyQty*0.85;
-
-      // Use IB's realizedPnl if available, else calculate
-      let finalPnl=g.realizedPnl;
-      if(Math.abs(finalPnl)<0.001&&isClosed&&avgEntry>0&&avgExit>0){
-        finalPnl=(avgExit-avgEntry)*Math.min(totalBuyQty,totalSellQty)-g.totalFee;
-      }
-
-      const t={
-        date:g.date,
-        symbol:g.symbol,
-        direction:'Long',
-        status:isClosed?'סגורה':'פתוחה',
-        qty:parseFloat(tradeQty.toFixed(0)),
-        entry:parseFloat(avgEntry.toFixed(4)),
-        exit:isClosed?parseFloat(avgExit.toFixed(4)):0,
-        fee:parseFloat(g.totalFee.toFixed(2)),
-        ibPnl:parseFloat(finalPnl.toFixed(2)),
-        ibGroupKey:key,
-        source:'ib',
-        account:p
-      };
+      const ibPnlRaw=parseFloat(tag.getAttribute('fifoPnlRealized')||0);
+      const closePrice=parseFloat(tag.getAttribute('closePrice')||0);
+      let entry=price,exit=0,ibPnl=ibPnlRaw,status='פתוחה',direction='Long';
+      if(isSell&&ibPnlRaw!==0){direction='Long';exit=price;entry=parseFloat((exit-(ibPnlRaw+fee)/qty).toFixed(6));status='סגורה';}
+      else if(isSell&&ibPnlRaw===0){direction='Long';exit=price;entry=closePrice||price;status='פתוחה';}
+      else{direction='Long';entry=price;exit=closePrice||0;status=exit>0?'סגורה':'פתוחה';if(exit>0)ibPnl=(exit-entry)*qty-fee;}
+      const t={date,symbol:tag.getAttribute('symbol')||'',direction,status,qty,entry,exit,fee,ibPnl,ibTradeId:ibId,source:'ib',account:p};
       const nid=await saveTradeFS(p,{id:null,...t});
-      trades[p].push({id:nid,...t});
-      cnt++;
+      trades[p].push({id:nid,...t});cnt++;
     }
-
     trades[p].sort((a,b)=>(a.date||'')>(b.date||'')?1:-1);
-    showSR(p,'success',`✅ סונכרן — ${cnt} עסקאות (שורה אחת לכל סמל ליום)`);
+    showSR(p,'success',`✅ סונכרן בהצלחה — ${cnt} עסקאות חדשות`);
     if(btn&&p===currentAccount){btn.innerHTML='⟳ סנכרן מ-IB';btn.disabled=false;}
     refresh();
   }catch(e){
@@ -958,35 +873,6 @@ window.clearAll=async()=>{
   trades[currentAccount]=[];refresh();
 };
 
-// ── DEDUP: remove old per-execution trades, keep only grouped ──
-window.dedupTrades=async()=>{
-  if(!confirm('זה ימחק עסקאות IB ישנות (כפילויות) וישאיר רק עסקאות מאוחדות. להמשיך?'))return;
-  const p=currentAccount;
-  // Group existing IB trades by symbol+date, keep only the one with ibGroupKey
-  const toDelete=[];
-  const seen={};
-  for(const t of trades[p]){
-    if(t.source!=='ib')continue;
-    const key=t.ibGroupKey||(t.symbol+'_'+t.date);
-    if(t.ibGroupKey){
-      // Already grouped — keep, mark key as seen
-      seen[key]=(seen[key]||0)+1;
-      if(seen[key]>1)toDelete.push(t); // duplicate grouped
-    } else {
-      // Old format (per-execution) — delete
-      toDelete.push(t);
-    }
-  }
-  if(!toDelete.length){alert('אין כפילויות למחוק ✅');return;}
-  if(!confirm(`נמצאו ${toDelete.length} רשומות לניקוי. למחוק?`))return;
-  for(const t of toDelete){
-    await deleteTradeFS(p,t.id);
-    trades[p]=trades[p].filter(x=>x.id!==t.id);
-  }
-  alert(`✅ נוקו ${toDelete.length} כפילויות. מומלץ לסנכרן מחדש מ-IB.`);
-  refresh();
-};
-
 // ── REFRESH ──
 function refresh(){
   renderStats();renderCharts();renderRecentTrades();
@@ -998,8 +884,6 @@ function refresh(){
 
 document.getElementById('tradeModal').addEventListener('click',e=>{if(e.target===e.currentTarget)window.closeModal();});
 document.getElementById('detailModal').addEventListener('click',e=>{if(e.target===e.currentTarget)window.closeModal();});
-
-}; // end _firebaseReady
 </script>
 </body>
 </html>
