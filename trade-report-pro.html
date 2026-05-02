@@ -3,11 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trading Journal Pro</title>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<title>Trade Report Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans+Hebrew:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -212,21 +208,21 @@
 <!-- AUTH -->
 <div id="authScreen">
   <div class="auth-box">
-    <div class="auth-logo">TRADING JOURNAL PRO</div>
+    <div class="auth-logo">TRADE REPORT</div>
     <div class="auth-sub">PRO · יומן מסחר מקצועי</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login',this)">התחברות</button>
+      <button class="auth-tab" onclick="switchAuthTab('register',this)">הרשמה</button>
+    </div>
     <div id="loginForm">
       <div class="auth-input-group"><label>אימייל</label><input type="email" id="loginEmail" placeholder="trader@email.com"></div>
-      <div class="auth-input-group"><label>סיסמה</label><input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')window._doLogin()"></div>
-      <button class="auth-btn" onclick="window._doLogin()">כניסה →</button>
+      <div class="auth-input-group"><label>סיסמה</label><input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="auth-btn" onclick="doLogin()">כניסה →</button>
     </div>
     <div id="registerForm" style="display:none">
       <div class="auth-input-group"><label>אימייל</label><input type="email" id="regEmail" placeholder="trader@email.com"></div>
-      <div class="auth-input-group"><label>סיסמה (מינימום 6 תווים)</label><input type="password" id="regPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')window._doRegister()"></div>
-      <button class="auth-btn" onclick="window._doRegister()">צור חשבון →</button>
-    </div>
-    <div class="auth-tabs" style="margin-top:16px">
-      <button class="auth-tab active" onclick="window._switchTab('login',this)">התחברות</button>
-      <button class="auth-tab" onclick="window._switchTab('register',this)">הרשמה</button>
+      <div class="auth-input-group"><label>סיסמה (מינימום 6 תווים)</label><input type="password" id="regPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doRegister()"></div>
+      <button class="auth-btn" onclick="doRegister()">צור חשבון →</button>
     </div>
     <div class="auth-error" id="authError"></div>
   </div>
@@ -239,7 +235,7 @@
   <header>
     <div class="logo">
       <div class="logo-icon">📊</div>
-      <div><div class="logo-text">TRADING JOURNAL PRO</div><div class="logo-sub">יומן מסחר מקצועי</div></div>
+      <div><div class="logo-text">TRADE REPORT PRO</div><div class="logo-sub">יומן מסחר מקצועי</div></div>
     </div>
     <div class="header-right">
       <div class="account-switcher">
@@ -264,4 +260,14 @@
   <!-- DATE FILTER (global) -->
   <div class="date-filter-bar" id="dateFilterBar">
     <button class="df-btn active" onclick="setDateFilter('week',this)">שבוע</button>
-    <button class="df-btn" onclick="setDateFilter('month',this)">חוד
+    <button class="df-btn" onclick="setDateFilter('month',this)">חודש</button>
+    <button class="df-btn" onclick="setDateFilter('3m',this)">3 חודשים</button>
+    <button class="df-btn" onclick="setDateFilter('6m',this)">6 חודשים</button>
+    <button class="df-btn" onclick="setDateFilter('year',this)">שנה</button>
+    <button class="df-btn" onclick="setDateFilter('all',this)">הכל</button>
+  </div>
+
+  <!-- STATS (global, filtered) -->
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <!-- ══════ DASHBOARD ═══
