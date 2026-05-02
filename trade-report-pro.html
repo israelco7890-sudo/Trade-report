@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trading Journal Pro</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans+Hebrew:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -263,15 +267,4 @@
     <button class="df-btn" onclick="setDateFilter('month',this)">חודש</button>
     <button class="df-btn" onclick="setDateFilter('3m',this)">3 חודשים</button>
     <button class="df-btn" onclick="setDateFilter('6m',this)">6 חודשים</button>
-    <button class="df-btn" onclick="setDateFilter('year',this)">שנה</button>
-    <button class="df-btn" onclick="setDateFilter('all',this)">הכל</button>
-  </div>
-
-  <!-- STATS (global, filtered) -->
-  <div class="stats-grid" id="statsGrid"></div>
-
-  <!-- ══════ DASHBOARD ══════ -->
-  <div class="panel active" id="panel-dashboard">
-    <div class="sync-banner">
-      <div>
-        <div class="sync-banner-text">🔗
+    <button class="df-btn" onclick="setDateFil
