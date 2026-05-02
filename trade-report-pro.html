@@ -214,19 +214,19 @@
   <div class="auth-box">
     <div class="auth-logo">TRADING JOURNAL PRO</div>
     <div class="auth-sub">PRO · יומן מסחר מקצועי</div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tabLogin">התחברות</button>
-      <button class="auth-tab" id="tabRegister">הרשמה</button>
-    </div>
     <div id="loginForm">
       <div class="auth-input-group"><label>אימייל</label><input type="email" id="loginEmail" placeholder="trader@email.com"></div>
-      <div class="auth-input-group"><label>סיסמה</label><input type="password" id="loginPass" placeholder="••••••••"></div>
-      <button class="auth-btn" id="btnLogin">כניסה →</button>
+      <div class="auth-input-group"><label>סיסמה</label><input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')window._doLogin()"></div>
+      <button class="auth-btn" onclick="window._doLogin()">כניסה →</button>
     </div>
     <div id="registerForm" style="display:none">
       <div class="auth-input-group"><label>אימייל</label><input type="email" id="regEmail" placeholder="trader@email.com"></div>
-      <div class="auth-input-group"><label>סיסמה (מינימום 6 תווים)</label><input type="password" id="regPass" placeholder="••••••••"></div>
-      <button class="auth-btn" id="btnRegister">צור חשבון →</button>
+      <div class="auth-input-group"><label>סיסמה (מינימום 6 תווים)</label><input type="password" id="regPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')window._doRegister()"></div>
+      <button class="auth-btn" onclick="window._doRegister()">צור חשבון →</button>
+    </div>
+    <div class="auth-tabs" style="margin-top:16px">
+      <button class="auth-tab active" onclick="window._switchTab('login',this)">התחברות</button>
+      <button class="auth-tab" onclick="window._switchTab('register',this)">הרשמה</button>
     </div>
     <div class="auth-error" id="authError"></div>
   </div>
@@ -264,7 +264,4 @@
   <!-- DATE FILTER (global) -->
   <div class="date-filter-bar" id="dateFilterBar">
     <button class="df-btn active" onclick="setDateFilter('week',this)">שבוע</button>
-    <button class="df-btn" onclick="setDateFilter('month',this)">חודש</button>
-    <button class="df-btn" onclick="setDateFilter('3m',this)">3 חודשים</button>
-    <button class="df-btn" onclick="setDateFilter('6m',this)">6 חודשים</button>
-    <button class="df-btn" onclick="setDateFil
+    <button class="df-btn" onclick="setDateFilter('month',this)">חוד
